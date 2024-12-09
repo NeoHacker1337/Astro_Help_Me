@@ -6,41 +6,41 @@ import BottomNavigation from '../Navigations/BottomNavigation';
 
 const OnboardingScreen = () => {
 
-    const navigation = useNavigation()
+  const navigation = useNavigation()
 
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    
+
     Animated.loop(
       Animated.timing(rotateAnim, {
-        toValue: 1,  
-        duration: 8000,  
-        useNativeDriver: true, 
+        toValue: 1,
+        duration: 8000,
+        useNativeDriver: true,
       })
     ).start();
-      
-  
-    const timer = setTimeout(() => {
-     navigation.navigate("Home")  
-    }, 5000);
 
-    
+
+    const timer = setTimeout(() => {
+      navigation.navigate("Login")
+    }, 3000);
+
+
     return () => clearTimeout(timer);
   }, [rotateAnim]);
 
-  
+
   const rotation = rotateAnim.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
- 
+
 
   return (
     <View style={styles.container}>
-      <ImageBackground 
-        source={{ uri: "https://img.freepik.com/premium-photo/astronomical-background-with-zodiac-signs-horoscope-astrology-concept_1308175-202217.jpg" }} 
+      <ImageBackground
+        source={{ uri: "https://img.freepik.com/premium-photo/astronomical-background-with-zodiac-signs-horoscope-astrology-concept_1308175-202217.jpg" }}
         style={styles.BgImage}
       >
         {/* Apply the rotation to the image and center it */}

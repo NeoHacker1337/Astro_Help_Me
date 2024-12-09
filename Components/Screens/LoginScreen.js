@@ -34,9 +34,13 @@ const LoginScreen = ({ navigation }) => {  // Destructure navigation from props
                 placeholderTextColor="#eee"
             />
 
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Login</Text>
-            </TouchableOpacity>
+<TouchableOpacity
+  style={styles.button}
+  onPress={() => navigation.navigate('Main', { screen: 'Home' })}
+>
+  <Text style={styles.buttonText}>Login</Text>
+</TouchableOpacity>
+
 
             <View style={styles.linkContainer}>
                 <TouchableOpacity onPress={() => navigation.navigate('Forgot')}>

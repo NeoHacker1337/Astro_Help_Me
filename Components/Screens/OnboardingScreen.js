@@ -23,7 +23,7 @@ const OnboardingScreen = () => {
 
     const timer = setTimeout(() => {
       navigation.navigate("Login")
-    }, 3000);
+    }, 5000);
 
 
     return () => clearTimeout(timer);

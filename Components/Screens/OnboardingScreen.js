@@ -2,7 +2,7 @@ import { Image, ImageBackground, StyleSheet, View, Animated, Text, Button } from
 import React, { useEffect, useRef, useState } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import BottomNavigation from '../Navigations/BottomNavigation';
+// import BottomNavigation from '../Navigations/BottomNavigation';
 
 const OnboardingScreen = () => {
 
@@ -23,7 +23,7 @@ const OnboardingScreen = () => {
 
     const timer = setTimeout(() => {
       navigation.navigate("Login")
-    }, 5000);
+    }, 3000);
 
 
     return () => clearTimeout(timer);

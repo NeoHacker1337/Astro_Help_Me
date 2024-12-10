@@ -1,5 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Platform,
+  KeyboardAvoidingView,
+  ScrollView,
+} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Dimensions } from 'react-native';
 
@@ -13,13 +24,25 @@ const SignupScreen = ({ navigation }) => {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignup = () => {
+    if (!validateEmail(email)) {
+      Alert.alert('Error', 'Invalid email format');
+      return;
+    }
+    if (!/^\d{10}$/.test(phone)) {
+      Alert.alert('Error', 'Enter a valid 10-digit phone number');
+      return;
+    }
+    if (password.length < 6) {
+      Alert.alert('Error', 'Password must be at least 6 characters');
+      return;
+    }
     if (password !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
-    // Handle the signup process here (e.g., send data to an API)
+
+    // Simulate signup success
     Alert.alert('Success', 'Signup successful');
-    // Redirect to the Login screen after successful signup
     navigation.navigate('Login');
   };
 
@@ -30,75 +53,82 @@ const SignupScreen = ({ navigation }) => {
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
     >
-      {/* App Name */}
-      <Text style={styles.appName}>Astro Help Me</Text>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          {/* App Name */}
+          <Text style={styles.appName}>Astro Help Me</Text>
 
-      {/* Logo */}
-      <Image
-        source={require('../../assets/images/logo.png')} // Correct relative path
-        style={styles.image}
-      />
+          {/* Logo */}
+          <Image
+            source={require('../../assets/images/logo.png')} // Correct relative path
+            style={styles.image}
+          />
 
-      {/* Name Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Full Name"
-        value={name}
-        onChangeText={setName}
-        placeholderTextColor="#eee"
-      />
+          {/* Name Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Full Name"
+            value={name}
+            onChangeText={setName}
+            placeholderTextColor="#eee"
+          />
 
-      {/* Email Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-        placeholderTextColor="#eee"
-      />
+          {/* Email Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+            placeholderTextColor="#eee"
+          />
 
-      {/* Phone Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        keyboardType="phone-pad"
-        value={phone}
-        onChangeText={setPhone}
-        placeholderTextColor="#eee"
-      />
+          {/* Phone Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Phone"
+            keyboardType="phone-pad"
+            value={phone}
+            onChangeText={setPhone}
+            placeholderTextColor="#eee"
+          />
 
-      {/* Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        placeholderTextColor="#eee"
-      />
+          {/* Password Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            placeholderTextColor="#eee"
+          />
 
-      {/* Confirm Password Input */}
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        placeholderTextColor="#eee"
-      />
+          {/* Confirm Password Input */}
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            placeholderTextColor="#eee"
+          />
 
-      {/* Signup Button */}
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+          {/* Signup Button */}
+          <TouchableOpacity style={styles.button} onPress={handleSignup}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
 
-      {/* Navigation to Login Screen */}
-      <View style={styles.linkContainer}>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.linkText}>Already have an account? Login</Text>
-        </TouchableOpacity>
-      </View>
+          {/* Navigation to Login Screen */}
+          <View style={styles.linkContainer}>
+            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+              <Text style={styles.linkText}>Already have an account? Login</Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </LinearGradient>
   );
 };
@@ -108,6 +138,9 @@ export default SignupScreen;
 const styles = StyleSheet.create({
   gradient: {
     flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
@@ -119,9 +152,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   image: {
-    width: screenWidth * 0.5, // 50% of screen width (adjust as needed)
-    height: screenWidth * 0.5, // Make height equal to width
-    borderRadius: screenWidth * 0.25, // Half of width/height for a perfect circle
+    width: screenWidth * 0.6,
+    height: screenWidth * 0.6,
+    borderRadius: screenWidth * 0.01,
     marginBottom: 30,
   },
   input: {

@@ -1,8 +1,9 @@
-import { StyleSheet } from 'react-native';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import OnboardingScreen from '../Screens/OnboardingScreen';
 import LoginScreen from '../Screens/LoginScreen';
 import SignupScreen from '../Screens/SignupScreen';
@@ -12,7 +13,6 @@ import AiAstroScreen from '../Screens/AiAstroScreen';
 import LiveScreen from '../Screens/LiveScreen';
 import AskScreen from '../Screens/AskScreen';
 import HistoryScreen from '../Screens/HistoryScreen';
-import Icon from 'react-native-vector-icons/Ionicons'; // Or another icon library
 
 // Stack and Tab Navigators
 const Stack = createNativeStackNavigator();
@@ -23,25 +23,24 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: { backgroundColor: '#f58802' }, // Customize tab bar style
+        tabBarStyle: { backgroundColor: '#f58802' },
         tabBarActiveTintColor: '#fff',
         tabBarInactiveTintColor: '#ddd',
         tabBarIcon: ({ color, size }) => {
           let iconName;
 
           if (route.name === 'Home') {
-            iconName = 'home'; // Use the icon name from your chosen library
+            iconName = 'home-outline';
           } else if (route.name === 'Ai Astro') {
-            iconName = 'planet'; // Example icon for Ai Astro
+            iconName = 'planet-outline';
           } else if (route.name === 'Live') {
-            iconName = 'radio'; // Example icon for Live
+            iconName = 'radio-outline';
           } else if (route.name === 'Ask') {
-            iconName = 'help-circle'; // Example icon for Ask
+            iconName = 'help-circle-outline';
           } else if (route.name === 'History') {
-            iconName = 'time'; // Example icon for History
+            iconName = 'time-outline';
           }
 
-          // Return the icon component
           return <Icon name={iconName} size={size} color={color} />;
         },
       })}
@@ -93,5 +92,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
-const styles = StyleSheet.create({});

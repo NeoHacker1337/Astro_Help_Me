@@ -12,18 +12,51 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Dimensions } from 'react-native';
+import { BASE_URL } from '../config'; // Correct relative path
+
 
 const screenWidth = Dimensions.get('window').width;
 
 const ForgotScreen = ({ navigation }) => {
-  const [email, setEmail] = useState(''); // State for email input
+  const [phone, setPhone] = useState(''); // State for phone input
+  const [loading, setLoading] = useState(false); // To track loading state
+  const [errorMessage, setErrorMessage] = useState(''); // For error message
 
-  const handleForgotPassword = () => {
-    // You can add logic here to send a password reset request
-    alert('Password reset link sent to: ' + email);
-    // Optionally, navigate back to the login screen after the action
-    navigation.navigate('Login');
+  const handleForgotPassword = async () => {
+    setLoading(true);
+    setErrorMessage(''); // Reset error message
+
+    try {
+      // Send a POST request to the API
+      const response = await fetch(`${BASE_URL}forgot-password`, {
+        method: 'POST', // Ensure it's a POST request
+        headers: {
+          'Content-Type': 'application/json', // Set Content-Type for JSON request
+        },
+        body: JSON.stringify({ phone }), // Send phone number in request body
+      });
+
+      const responseData = await response.json(); // Parse the response to JSON
+
+      if (response.ok) {
+        if (responseData.status === 'success') {
+          alert('OTP sent successfully. Please check your phone for the OTP.');
+          // Navigate to OTP screen or any other screen
+          navigation.navigate('EnterOTP', { phone: phone });
+        } else {
+          setErrorMessage(responseData.message || 'Something went wrong. Please try again.');
+        }
+      } else {
+        setErrorMessage(responseData.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      setErrorMessage('An error occurred. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
+
 
   return (
     <LinearGradient
@@ -46,19 +79,30 @@ const ForgotScreen = ({ navigation }) => {
             style={styles.image}
           />
 
-          {/* Email or Phone Input */}
+          {/* Phone Input */}
           <TextInput
             style={styles.input}
-            placeholder="Enter your email or phone number"
-            keyboardType="email-address"
+            placeholder="Enter your phone number"
+            keyboardType="phone-pad"
             placeholderTextColor="#eee"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
+            value={phone}
+            onChangeText={(text) => setPhone(text)}
           />
 
+          {/* Error Message */}
+          {errorMessage ? (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          ) : null}
+
           {/* Reset Link Button */}
-          <TouchableOpacity style={styles.button} onPress={handleForgotPassword}>
-            <Text style={styles.buttonText}>Send Reset Link</Text>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={handleForgotPassword}
+            disabled={loading}
+          >
+            <Text style={styles.buttonText}>
+              {loading ? 'Sending OTP...' : 'Send OTP'}
+            </Text>
           </TouchableOpacity>
 
           {/* Back to Login Link */}
@@ -132,5 +176,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     textAlign: 'center',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+    marginBottom: 10,
   },
 });

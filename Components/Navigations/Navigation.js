@@ -3,7 +3,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import OnboardingScreen from '../Screens/OnboardingScreen';
 import LoginScreen from '../Screens/LoginScreen';
 import SignupScreen from '../Screens/SignupScreen';
@@ -13,6 +16,9 @@ import AiAstroScreen from '../Screens/AiAstroScreen';
 import LiveScreen from '../Screens/LiveScreen';
 import AskScreen from '../Screens/AskScreen';
 import HistoryScreen from '../Screens/HistoryScreen';
+import EnterOTPScreen from '../Screens/EnterOTPScreen';
+import EnterPasswordScreen from '../Screens/EnterPasswordScreen';
+import KundliScreen from '../Screens/KundliScreen';
 
 // Stack and Tab Navigators
 const Stack = createNativeStackNavigator();
@@ -23,7 +29,27 @@ const BottomTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarStyle: { backgroundColor: '#f58802' },
+        tabBarStyle: {
+          position: 'absolute',
+          width: '100%',
+          // bottom: hp(3),
+          // left: wp(4),
+          right: wp(4),
+          padding: 5,
+          elevation: 0,
+          backgroundColor: '#263E3E',
+          // blurtype: 'regular',
+          // borderRadius: 30,
+          height: hp(9),
+          shadowColor: '#7F5DF0',
+          shadowOffset: {
+            width: 0,
+            height: wp(2),
+          },
+          shadowOpacity: 0.25,
+          shadowRadius: 3.5,
+          elevation: 5,
+        },
         tabBarActiveTintColor: '#fff',
         tabBarInactiveTintColor: '#ddd',
         tabBarIcon: ({ color, size }) => {
@@ -45,11 +71,11 @@ const BottomTabs = () => {
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Ai Astro" component={AiAstroScreen} />
-      <Tab.Screen name="Live" component={LiveScreen} />
-      <Tab.Screen name="Ask" component={AskScreen} />
-      <Tab.Screen name="History" component={HistoryScreen} />
+      <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Ai Astro" component={AiAstroScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Live" component={LiveScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="Ask" component={AskScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="History" component={HistoryScreen} options={{ headerShown: false }} />
     </Tab.Navigator>
   );
 };
@@ -76,6 +102,16 @@ const Navigation = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="EnterOTP"
+          component={EnterOTPScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EnterPassword"
+          component={EnterPasswordScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Forgot"
           component={ForgotScreen}
           options={{ headerShown: false }}
@@ -84,6 +120,11 @@ const Navigation = () => {
         <Stack.Screen
           name="Main"
           component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Kundli"
+          component={KundliScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

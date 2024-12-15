@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,13 +9,76 @@ import {
   Platform,
   KeyboardAvoidingView,
   ScrollView,
+  Alert,
+  ActivityIndicator, // Import ActivityIndicator for loader
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { Dimensions } from 'react-native';
+import { BASE_URL } from '../config';  // Correct relative path
 
+// Define screen width for responsive design
 const screenWidth = Dimensions.get('window').width;
 
 const LoginScreen = ({ navigation }) => {
+  // State variables to manage input fields and loading state
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false); // Loading state
+
+  // Phone number validation regex
+  const validatePhone = (phone) => {
+    const re = /^\d{10}$/;
+    return re.test(phone);
+  };
+
+  // Handle login
+  const handleLogin = async () => {
+    // Check if the fields are empty
+    if (!phone || !password) {
+      Alert.alert('Error', 'Both fields are required.');
+      return;
+    }
+
+    // Validate phone number
+    if (!validatePhone(phone)) {
+      Alert.alert('Error', 'Please enter a valid 10-digit phone number.');
+      return;
+    }
+
+    // Show loader
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${BASE_URL}login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          phone,
+          password,
+        }),
+      });
+
+      const data = await response.json();
+
+      // Hide loader
+      setLoading(false);
+
+      if (response.ok) {
+        Alert.alert('Success', 'Login successful!');
+        navigation.navigate('Main', { screen: 'Home' });
+      } else {
+        Alert.alert('Error', data.message || 'Login failed!');
+      }
+    } catch (error) {
+      // Hide loader on error
+      setLoading(false);
+      console.error('Error during login:', error);
+      Alert.alert('Error', error.message || 'Something went wrong');
+    }
+  };
+
   return (
     <LinearGradient
       colors={['#8015cf', '#f58802']}
@@ -42,6 +105,9 @@ const LoginScreen = ({ navigation }) => {
             style={styles.input}
             placeholder="Phone"
             keyboardType="phone-pad"
+            maxLength={10}
+            value={phone}
+            onChangeText={setPhone}
             placeholderTextColor="#eee"
           />
 
@@ -50,15 +116,22 @@ const LoginScreen = ({ navigation }) => {
             style={styles.input}
             placeholder="Password"
             secureTextEntry
+            value={password}
+            onChangeText={setPassword}
             placeholderTextColor="#eee"
           />
 
           {/* Login Button */}
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('Main', { screen: 'Home' })}
+            onPress={handleLogin}
+            disabled={loading} // Disable button while loading
           >
-            <Text style={styles.buttonText}>Login</Text>
+            {loading ? (
+              <ActivityIndicator size="small" color="#000" /> // Show loader when loading
+            ) : (
+              <Text style={styles.buttonText}>Login</Text>
+            )}
           </TouchableOpacity>
 
           {/* Forgot Password and Sign Up Links */}
